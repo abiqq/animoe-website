@@ -3,60 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anime Genres - AniMoe</title>
+    <title>Genre - AniMoe</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* CSS dari index.html */
+        /* CSS dari index.html dan anime-list.html */
 
-        /* Genres Page */
-        .genres-container {
-            margin: 40px 0;
-        }
-
-        .genres-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .genre-card {
-            background-color: var(--white);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
+        /* Genre Page */
+        .genre-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 50px 0;
             text-align: center;
+            margin-bottom: 40px;
+            border-radius: 10px;
         }
 
-        .genre-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(255, 126, 185, 0.3);
+        .genre-title {
+            font-size: 36px;
+            margin-bottom: 10px;
         }
 
-        .genre-image {
-            height: 120px;
-            background-color: var(--light-pink);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--secondary-color);
-            font-size: 40px;
-        }
-
-        .genre-info {
-            padding: 15px;
-        }
-
-        .genre-name {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: var(--secondary-color);
-        }
-
-        .genre-count {
-            font-size: 14px;
-            color: #777;
+        .genre-description {
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -72,7 +42,7 @@
                 <ul>
                     <li><a href="index.html">Home</a></li>
                     <li><a href="anime-list.html">Anime List</a></li>
-                    <li><a href="genres.html" class="active">Genres</a></li>
+                    <li><a href="genres.html">Genres</a></li>
                     <li><a href="schedule.html">Schedule</a></li>
                     <li><a href="about.html">About</a></li>
                 </ul>
@@ -85,14 +55,21 @@
         </div>
     </header>
 
-    <section class="container genres-container">
-        <div class="page-title">
-            <h1>Anime Genres</h1>
-            <p>Browse anime by genre. Find your favorite categories and discover new shows!</p>
+    <section class="container">
+        <div class="genre-header" id="genreHeader">
+            <!-- Genre header will be loaded here -->
         </div>
 
-        <div class="genres-grid" id="genresList">
-            <!-- Genres will be loaded here by JavaScript -->
+        <div class="filter-section">
+            <!-- Filter section sama seperti anime-list.html -->
+        </div>
+
+        <div class="anime-grid" id="animeList">
+            <!-- Anime list will be loaded here -->
+        </div>
+
+        <div class="pagination" id="pagination">
+            <!-- Pagination will be loaded here -->
         </div>
     </section>
 
@@ -101,51 +78,162 @@
     </footer>
 
     <script>
-        // List of anime genres
-        const animeGenres = [
-            { name: "Action", icon: "fa-bolt", count: 1250 },
-            { name: "Adventure", icon: "fa-mountain", count: 980 },
-            { name: "Comedy", icon: "fa-laugh", count: 1560 },
-            { name: "Drama", icon: "fa-theater-masks", count: 1120 },
-            { name: "Fantasy", icon: "fa-dragon", count: 1340 },
-            { name: "Horror", icon: "fa-ghost", count: 450 },
-            { name: "Mystery", icon: "fa-search", count: 680 },
-            { name: "Romance", icon: "fa-heart", count: 1470 },
-            { name: "Sci-Fi", icon: "fa-robot", count: 920 },
-            { name: "Slice of Life", icon: "fa-home", count: 870 },
-            { name: "Sports", icon: "fa-running", count: 320 },
-            { name: "Supernatural", icon: "fa-magic", count: 760 }
-        ];
-
-        // Function to render genres
-        function renderGenres() {
-            const genresListElement = document.getElementById('genresList');
+        // Get genre name from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const genreName = urlParams.get('name');
+        
+        // Current page and total pages
+        let currentPage = 1;
+        let totalPages = 1;
+        
+        // Function to fetch anime by genre from Aniwatch API
+        async function fetchAnimeByGenre(page = 1) {
+            if (!genreName) {
+                showError("No genre specified");
+                return;
+            }
             
-            genresListElement.innerHTML = '';
+            try {
+                // Show loading state
+                document.getElementById('animeList').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px">Loading anime...</div>';
+                
+                // Fetch data from Aniwatch API
+                const response = await fetch(`/api/v2/hianime/genre/${genreName}?page=${page}`);
+                const data = await response.json();
+                
+                // Check if request was successful
+                if (data.success) {
+                    currentPage = data.data.currentPage;
+                    totalPages = data.data.totalPages;
+                    renderGenreHeader(data.data.genreName);
+                    renderAnimeList(data.data.animes);
+                    renderPagination();
+                } else {
+                    showError("Failed to load anime list");
+                }
+            } catch (error) {
+                console.error('Error fetching anime by genre:', error);
+                showError("Error loading anime. Please try again later.");
+            }
+        }
+        
+        // Function to render genre header
+        function renderGenreHeader(genreName) {
+            const genreHeaderElement = document.getElementById('genreHeader');
             
-            animeGenres.forEach(genre => {
-                const genreCard = document.createElement('div');
-                genreCard.className = 'genre-card';
-                genreCard.innerHTML = `
-                    <div class="genre-image">
-                        <i class="fas ${genre.icon}"></i>
-                    </div>
-                    <div class="genre-info">
-                        <h3 class="genre-name">${genre.name}</h3>
-                        <div class="genre-count">${genre.count}+ Anime</div>
+            genreHeaderElement.innerHTML = `
+                <h1 class="genre-title">${genreName}</h1>
+                <p class="genre-description">Browse all anime in the ${genreName} category. Find your next favorite show!</p>
+            `;
+        }
+        
+        // Function to render anime list
+        function renderAnimeList(animes) {
+            const animeListElement = document.getElementById('animeList');
+            
+            if (animes.length === 0) {
+                animeListElement.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px">No anime found in this genre.</div>';
+                return;
+            }
+            
+            animeListElement.innerHTML = '';
+            
+            animes.forEach(anime => {
+                const animeCard = document.createElement('div');
+                animeCard.className = 'anime-card';
+                animeCard.innerHTML = `
+                    <img src="${anime.poster}" alt="${anime.name}" onerror="this.src='https://via.placeholder.com/200x300?text=No+Image'">
+                    <div class="anime-info">
+                        <h3>${anime.name}</h3>
+                        <div class="meta">
+                            <span>${anime.type || 'N/A'}</span>
+                            <span class="rating">${anime.rating || 'N/A'}</span>
+                        </div>
                     </div>
                 `;
                 
-                genreCard.addEventListener('click', () => {
-                    window.location.href = `genre.html?name=${genre.name.toLowerCase()}`;
+                // Add click event to view anime details
+                animeCard.addEventListener('click', () => {
+                    window.location.href = `anime-details.html?id=${anime.id}`;
                 });
                 
-                genresListElement.appendChild(genreCard);
+                animeListElement.appendChild(animeCard);
             });
         }
+        
+        // Function to render pagination
+        function renderPagination() {
+            const paginationElement = document.getElementById('pagination');
+            paginationElement.innerHTML = '';
+            
+            // Previous button
+            const prevBtn = document.createElement('a');
+            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevBtn.href = '#';
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    fetchAnimeByGenre(currentPage - 1);
+                }
+            });
+            paginationElement.appendChild(prevBtn);
+            
+            // Page numbers
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, currentPage + 2);
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageLink = document.createElement(i === currentPage ? 'span' : 'a');
+                if (i !== currentPage) {
+                    pageLink.href = '#';
+                    pageLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        fetchAnimeByGenre(i);
+                    });
+                } else {
+                    pageLink.className = 'current';
+                }
+                pageLink.textContent = i;
+                paginationElement.appendChild(pageLink);
+            }
+            
+            // Next button
+            const nextBtn = document.createElement('a');
+            nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextBtn.href = '#';
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    fetchAnimeByGenre(currentPage + 1);
+                }
+            });
+            paginationElement.appendChild(nextBtn);
+        }
+        
+        // Function to show error message
+        function showError(message) {
+            document.getElementById('animeList').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:50px">${message}</div>`;
+        }
+        
+        // Initialize filters (sama seperti anime-list.html)
+        function initializeFilters() {
+            document.getElementById('applyBtn').addEventListener('click', () => {
+                alert('Advanced filtering will be implemented here');
+            });
 
+            document.getElementById('resetBtn').addEventListener('click', () => {
+                document.getElementById('type').value = 'all';
+                document.getElementById('status').value = 'all';
+                document.getElementById('language').value = 'all';
+                document.getElementById('year').value = '';
+            });
+        }
+        
         // Initialize the page
-        document.addEventListener('DOMContentLoaded', renderGenres);
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAnimeByGenre();
+            initializeFilters();
+        });
     </script>
 </body>
 </html>
