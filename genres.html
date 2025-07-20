@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Genres - AniMoe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS dari index.html */
+
+        /* Genres Page */
+        .genres-container {
+            margin: 40px 0;
+        }
+
+        .genres-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .genre-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .genre-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 126, 185, 0.3);
+        }
+
+        .genre-image {
+            height: 120px;
+            background-color: var(--light-pink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 40px;
+        }
+
+        .genre-info {
+            padding: 15px;
+        }
+
+        .genre-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+
+        .genre-count {
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-heart"></i>
+                AniMoe
+            </a>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="anime-list.html">Anime List</a></li>
+                    <li><a href="genres.html" class="active">Genres</a></li>
+                    <li><a href="schedule.html">Schedule</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </nav>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Search anime...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <section class="container genres-container">
+        <div class="page-title">
+            <h1>Anime Genres</h1>
+            <p>Browse anime by genre. Find your favorite categories and discover new shows!</p>
+        </div>
+
+        <div class="genres-grid" id="genresList">
+            <!-- Genres will be loaded here by JavaScript -->
+        </div>
+    </section>
+
+    <footer>
+        <!-- Footer sama seperti index.html -->
+    </footer>
+
+    <script>
+        // List of anime genres
+        const animeGenres = [
+            { name: "Action", icon: "fa-bolt", count: 1250 },
+            { name: "Adventure", icon: "fa-mountain", count: 980 },
+            { name: "Comedy", icon: "fa-laugh", count: 1560 },
+            { name: "Drama", icon: "fa-theater-masks", count: 1120 },
+            { name: "Fantasy", icon: "fa-dragon", count: 1340 },
+            { name: "Horror", icon: "fa-ghost", count: 450 },
+            { name: "Mystery", icon: "fa-search", count: 680 },
+            { name: "Romance", icon: "fa-heart", count: 1470 },
+            { name: "Sci-Fi", icon: "fa-robot", count: 920 },
+            { name: "Slice of Life", icon: "fa-home", count: 870 },
+            { name: "Sports", icon: "fa-running", count: 320 },
+            { name: "Supernatural", icon: "fa-magic", count: 760 }
+        ];
+
+        // Function to render genres
+        function renderGenres() {
+            const genresListElement = document.getElementById('genresList');
+            
+            genresListElement.innerHTML = '';
+            
+            animeGenres.forEach(genre => {
+                const genreCard = document.createElement('div');
+                genreCard.className = 'genre-card';
+                genreCard.innerHTML = `
+                    <div class="genre-image">
+                        <i class="fas ${genre.icon}"></i>
+                    </div>
+                    <div class="genre-info">
+                        <h3 class="genre-name">${genre.name}</h3>
+                        <div class="genre-count">${genre.count}+ Anime</div>
+                    </div>
+                `;
+                
+                genreCard.addEventListener('click', () => {
+                    window.location.href = `genre.html?name=${genre.name.toLowerCase()}`;
+                });
+                
+                genresListElement.appendChild(genreCard);
+            });
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', renderGenres);
+    </script>
+</body>
+</html>
