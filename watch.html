@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Anime - AniMoe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS dari index.html */
+
+        /* Watch Section */
+        .watch-container {
+            margin: 40px 0;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            background-color: #000;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .episode-info {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .episode-title {
+            font-size: 24px;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .episode-number {
+            font-size: 16px;
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .episode-description {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .server-selection {
+            margin-bottom: 30px;
+        }
+
+        .server-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .server-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: var(--light-gray);
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .server-btn.active {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border-color: var(--secondary-color);
+        }
+
+        .server-btn:hover {
+            background-color: var(--light-pink);
+        }
+
+        .episode-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .episode-nav-btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .episode-nav-btn.prev {
+            background-color: var(--light-gray);
+            color: var(--text-color);
+        }
+
+        .episode-nav-btn.next {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .episode-nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .episode-list {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .episode-list-title {
+            font-size: 20px;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .episode-list-items {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .episode-list-item {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .episode-list-item:hover {
+            background-color: var(--light-pink);
+        }
+
+        .episode-list-item.active {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .episode-list-item .episode-number {
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .episode-list-item .episode-name {
+            color: inherit;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .episode-navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .episode-nav-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-heart"></i>
+                AniMoe
+            </a>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="anime-list.html">Anime List</a></li>
+                    <li><a href="genres.html">Genres</a></li>
+                    <li><a href="schedule.html">Schedule</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </nav>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Search anime...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container watch-container">
+        <div id="playerContainer">
+            <!-- Player will be loaded here by JavaScript -->
+        </div>
+
+        <div class="episode-info" id="episodeInfo">
+            <!-- Episode info will be loaded here -->
+        </div>
+
+        <div class="server-selection">
+            <h3>Select Server</h3>
+            <div class="server-options" id="serverOptions">
+                <!-- Server options will be loaded here -->
+            </div>
+        </div>
+
+        <div class="episode-navigation" id="episodeNavigation">
+            <!-- Navigation buttons will be loaded here -->
+        </div>
+
+        <div class="episode-list">
+            <h3 class="episode-list-title">Episode List</h3>
+            <div class="episode-list-items" id="episodeList">
+                <!-- Episode list will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <!-- Footer sama seperti index.html -->
+    </footer>
+
+    <script>
+        // Get episode ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const episodeId = urlParams.get('episodeId');
+        
+        // Current server and episode data
+        let currentServer = null;
+        let currentEpisode = null;
+        let allEpisodes = [];
+        let animeInfo = null;
+        
+        // Function to fetch episode data from Aniwatch API
+        async function fetchEpisodeData() {
+            if (!episodeId) {
+                showError("No episode ID provided");
+                return;
+            }
+            
+            try {
+                // Show loading state
+                document.getElementById('playerContainer').innerHTML = '<div style="text-align:center;padding:50px">Loading episode...</div>';
+                
+                // Fetch episode servers and anime info
+                const [serversResponse, animeResponse] = await Promise.all([
+                    fetch(`/api/v2/hianime/episode/servers?animeEpisodeId=${episodeId}`),
+                    fetch(`/api/v2/hianime/anime/${episodeId.split('?')[0]}`)
+                ]);
+                
+                const serversData = await serversResponse.json();
+                const animeData = await animeResponse.json();
+                
+                if (serversData.success && animeData.success) {
+                    animeInfo = animeData.data;
+                    currentEpisode = episodeId;
+                    
+                    // Fetch all episodes if available
+                    if (animeData.data.anime.info.stats.episodes) {
+                        const episodesResponse = await fetch(`/api/v2/hianime/anime/${episodeId.split('?')[0]}/episodes`);
+                        const episodesData = await episodesResponse.json();
+                        
+                        if (episodesData.success) {
+                            allEpisodes = episodesData.data.episodes;
+                            renderEpisodeList();
+                        }
+                    }
+                    
+                    renderServerOptions(serversData.data);
+                    renderEpisodeInfo();
+                    renderEpisodeNavigation();
+                } else {
+                    showError("Failed to load episode data");
+                }
+            } catch (error) {
+                console.error('Error fetching episode data:', error);
+                showError("Error loading episode. Please try again later.");
+            }
+        }
+        
+        // Function to fetch streaming links
+        async function fetchStreamingLinks(serverId, category = 'sub') {
+            try {
+                const response = await fetch(`/api/v2/hianime/episode/sources?animeEpisodeId=${currentEpisode}&server=${serverId}&category=${category}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    renderVideoPlayer(data.data);
+                } else {
+                    showError("Failed to load streaming links");
+                }
+            } catch (error) {
+                console.error('Error fetching streaming links:', error);
+                showError("Error loading video player. Please try again later.");
+            }
+        }
+        
+        // Function to render server options
+        function renderServerOptions(serversData) {
+            const serverOptionsElement = document.getElementById('serverOptions');
+            serverOptionsElement.innerHTML = '';
+            
+            // Default to sub if available, otherwise try dub
+            const defaultCategory = serversData.sub && serversData.sub.length > 0 ? 'sub' : 
+                                  serversData.dub && serversData.dub.length > 0 ? 'dub' : 'sub';
+            
+            const servers = serversData[defaultCategory] || [];
+            
+            if (servers.length === 0) {
+                serverOptionsElement.innerHTML = '<p>No servers available.</p>';
+                return;
+            }
+            
+            servers.forEach(server => {
+                const serverBtn = document.createElement('button');
+                serverBtn.className = 'server-btn';
+                serverBtn.textContent = server.serverName;
+                serverBtn.addEventListener('click', () => {
+                    document.querySelectorAll('.server-btn').forEach(btn => btn.classList.remove('active'));
+                    serverBtn.classList.add('active');
+                    currentServer = server.serverId;
+                    fetchStreamingLinks(server.serverId, defaultCategory);
+                });
+                
+                serverOptionsElement.appendChild(serverBtn);
+            });
+            
+            // Activate first server by default
+            if (servers.length > 0) {
+                serverOptionsElement.querySelector('.server-btn').click();
+            }
+        }
+        
+        // Function to render video player
+        function renderVideoPlayer(streamingData) {
+            const playerContainer = document.getElementById('playerContainer');
+            
+            // Find the best quality source
+            const bestSource = streamingData.sources.find(source => source.quality === '1080p') || 
+                              streamingData.sources.find(source => source.quality === '720p') || 
+                              streamingData.sources[0];
+            
+            if (bestSource) {
+                playerContainer.innerHTML = `
+                    <div class="video-container">
+                        <iframe src="${bestSource.url}" allowfullscreen></iframe>
+                    </div>
+                `;
+            } else {
+                playerContainer.innerHTML = '<div style="text-align:center;padding:50px">No video source available.</div>';
+            }
+        }
+        
+        // Function to render episode info
+        function renderEpisodeInfo() {
+            const episodeInfoElement = document.getElementById('episodeInfo');
+            
+            if (!animeInfo) {
+                episodeInfoElement.innerHTML = '<p>No episode information available.</p>';
+                return;
+            }
+            
+            // Find current episode in the list
+            const currentEp = allEpisodes.find(ep => ep.episodeId === currentEpisode);
+            
+            episodeInfoElement.innerHTML = `
+                <h2 class="episode-title">${animeInfo.anime.info.name}</h2>
+                ${currentEp ? `
+                    <div class="episode-number">Episode ${currentEp.number}</div>
+                    <div class="episode-description">${currentEp.title || 'No description available'}</div>
+                ` : ''}
+            `;
+        }
+        
+        // Function to render episode navigation
+        function renderEpisodeNavigation() {
+            const episodeNavigationElement = document.getElementById('episodeNavigation');
+            
+            if (allEpisodes.length === 0) {
+                episodeNavigationElement.innerHTML = '';
+                return;
+            }
+            
+            // Find current episode index
+            const currentIndex = allEpisodes.findIndex(ep => ep.episodeId === currentEpisode);
+            
+            episodeNavigationElement.innerHTML = `
+                ${currentIndex > 0 ? `
+                    <a href="watch.html?episodeId=${allEpisodes[currentIndex - 1].episodeId}" class="episode-nav-btn prev">
+                        <i class="fas fa-arrow-left"></i> Previous Episode
+                    </a>
+                ` : '<div></div>'}
+                
+                ${currentIndex < allEpisodes.length - 1 ? `
+                    <a href="watch.html?episodeId=${allEpisodes[currentIndex + 1].episodeId}" class="episode-nav-btn next">
+                        Next Episode <i class="fas fa-arrow-right"></i>
+                    </a>
+                ` : '<div></div>'}
+            `;
+        }
+        
+        // Function to render episode list
+        function renderEpisodeList() {
+            const episodeListElement = document.getElementById('episodeList');
+            
+            if (allEpisodes.length === 0) {
+                episodeListElement.innerHTML = '<p>No episodes available.</p>';
+                return;
+            }
+            
+            episodeListElement.innerHTML = '';
+            
+            allEpisodes.forEach(episode => {
+                const episodeItem = document.createElement('div');
+                episodeItem.className = `episode-list-item ${episode.episodeId === currentEpisode ? 'active' : ''}`;
+                episodeItem.innerHTML = `
+                    <span class="episode-number">${episode.number}</span>
+                    <span class="episode-name">${episode.title || 'Untitled'}</span>
+                `;
+                
+                episodeItem.addEventListener('click', () => {
+                    window.location.href = `watch.html?episodeId=${episode.episodeId}`;
+                });
+                
+                episodeListElement.appendChild(episodeItem);
+            });
+        }
+        
+        // Function to show error message
+        function showError(message) {
+            document.getElementById('playerContainer').innerHTML = `<div style="text-align:center;padding:50px">${message}</div>`;
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', fetchEpisodeData);
+    </script>
+</body>
+</html>
