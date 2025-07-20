@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - AniMoe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS dari index.html */
+
+        /* About Page */
+        .about-container {
+            margin: 40px 0;
+        }
+
+        .about-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .about-title {
+            font-size: 36px;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+
+        .about-description {
+            color: #777;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .about-section {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .team-member {
+            text-align: center;
+        }
+
+        .member-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 15px;
+            border: 3px solid var(--light-pink);
+        }
+
+        .member-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .member-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+
+        .member-role {
+            font-size: 16px;
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .member-social {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .member-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            background-color: var(--light-pink);
+            color: var(--secondary-color);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .member-social a:hover {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        .faq-question {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--light-pink);
+            color: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .contact-text h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+
+        .contact-text p {
+            color: #777;
+        }
+
+        .contact-form {
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: var(--light-gray);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--dark-pink);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-heart"></i>
+                AniMoe
+            </a>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="anime-list.html">Anime List</a></li>
+                    <li><a href="genres.html">Genres</a></li>
+                    <li><a href="schedule.html">Schedule</a></li>
+                    <li><a href="about.html" class="active">About</a></li>
+                </ul>
+            </nav>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Search anime...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <section class="container about-container">
+        <div class="about-header">
+            <h1 class="about-title">About AniMoe</h1>
+            <p class="about-description">Learn more about our platform, our team, and our mission to bring the best anime experience to fans worldwide.</p>
+        </div>
+
+        <div class="about-section">
+            <h2 class="section-title">Our Story</h2>
+            <p>AniMoe was founded in 2020 by a group of anime enthusiasts who wanted to create a better platform for fans to discover and watch their favorite shows. What started as a small project has grown into one of the most popular anime streaming platforms, serving millions of users worldwide.</p>
+            <p>Our mission is to provide high-quality anime content with a user-friendly interface, while supporting the anime industry and its creators.</p>
+        </div>
+
+        <div class="about-section">
+            <h2 class="section-title">Our Team</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="https://via.placeholder.com/150" alt="Team Member">
+                    </div>
+                    <h3 class="member-name">Sakura Tanaka</h3>
+                    <p class="member-role">Founder & CEO</p>
+                    <div class="member-social">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="https://via.placeholder.com/150" alt="Team Member">
+                    </div>
+                    <h3 class="member-name">Haruki Sato</h3>
+                    <p class="member-role">Lead Developer</p>
+                    <div class="member-social">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="https://via.placeholder.com/150" alt="Team Member">
+                    </div>
+                    <h3 class="member-name">Aoi Yamamoto</h3>
+                    <p class="member-role">Content Manager</p>
+                    <div class="member-social">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="https://via.placeholder.com/150" alt="Team Member">
+                    </div>
+                    <h3 class="member-name">Ren Takahashi</h3>
+                    <p class="member-role">Community Manager</p>
+                    <div class="member-social">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-reddit"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <h2 class="section-title">FAQ</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is AniMoe free to use?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! AniMoe is completely free to use. We believe that anime should be accessible to everyone. We support the industry through ads and partnerships.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How often is new content added?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We add new episodes as soon as they are available, usually within hours of their official release in Japan. Our team works around the clock to ensure you get the latest content.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I request an anime to be added?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! We welcome anime requests from our community. You can submit requests through our contact form or join our Discord community to suggest shows.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is there a mobile app available?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Currently, we don't have a dedicated mobile app, but our website is fully responsive and works great on mobile browsers. We're working on an app that will be released soon!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-info">
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-text">
+                        <h3>Email</h3>
+                        <p>support@animoe.com</p>
+                    </div>
+                </div>
+                
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-text">
+                        <h3>Phone</h3>
+                        <p>+1 (555) 123-4567</p>
+                    </div>
+                </div>
+                
+                <div class="contact-method">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="contact-text">
+                        <h3>Address</h3>
+                        <p>123 Otaku Street, Tokyo, Japan</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <!-- Footer sama seperti index.html -->
+    </footer>
+
+    <script>
+        // Toggle FAQ answers
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const icon = question.querySelector('i');
+                
+                if (answer.style.display === 'block') {
+                    answer.style.display = 'none';
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                } else {
+                    answer.style.display = 'block';
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                }
+            });
+        });
+
+        // Handle contact form submission
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            e.target.reset();
+        });
+
+        // Initialize FAQ answers to be hidden
+        document.querySelectorAll('.faq-answer').forEach(answer => {
+            answer.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
