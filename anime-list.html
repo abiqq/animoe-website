@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime List - AniMoe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS sama seperti index.html */
+        
+        /* Page Title */
+        .page-title {
+            text-align: center;
+            padding: 50px 0 30px;
+        }
+
+        .page-title h1 {
+            font-size: 36px;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+
+        .page-title p {
+            color: #777;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        .filter-group select, 
+        .filter-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: var(--light-gray);
+        }
+
+        .filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--secondary-color);
+            color: var(--secondary-color);
+            background-color: transparent;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .pagination a, 
+        .pagination span {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: var(--white);
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .pagination a:hover, 
+        .pagination .current {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-heart"></i>
+                AniMoe
+            </a>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="anime-list.html" class="active">Anime List</a></li>
+                    <li><a href="genres.html">Genres</a></li>
+                    <li><a href="schedule.html">Schedule</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </nav>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Search anime...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <section class="container">
+        <div class="page-title">
+            <h1>Anime List</h1>
+            <p>Browse through our extensive collection of anime series and movies. Find your next favorite show!</p>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="sort">Sort By</label>
+                    <select id="sort">
+                        <option value="all">All</option>
+                        <option value="0-9">0-9</option>
+                        <option value="a">A</option>
+                        <option value="b">B</option>
+                        <option value="c">C</option>
+                        <!-- Add more letters as needed -->
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="type">Type</label>
+                    <select id="type">
+                        <option value="all">All</option>
+                        <option value="tv">TV Series</option>
+                        <option value="movie">Movie</option>
+                        <option value="ova">OVA</option>
+                        <option value="ona">ONA</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="status">Status</label>
+                    <select id="status">
+                        <option value="all">All</option>
+                        <option value="airing">Airing</option>
+                        <option value="completed">Completed</option>
+                        <option value="upcoming">Upcoming</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label for="genre">Genre</label>
+                    <select id="genre">
+                        <option value="all">All Genres</option>
+                        <option value="action">Action</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="comedy">Comedy</option>
+                        <option value="drama">Drama</option>
+                        <option value="fantasy">Fantasy</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="language">Language</label>
+                    <select id="language">
+                        <option value="all">All</option>
+                        <option value="sub">Subbed</option>
+                        <option value="dub">Dubbed</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="year">Year</label>
+                    <input type="number" id="year" placeholder="Filter by year" min="1900" max="2023">
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button class="btn btn-outline" id="resetBtn">Reset</button>
+                <button class="btn btn-primary" id="applyBtn">Apply Filters</button>
+            </div>
+        </div>
+
+        <div class="anime-grid" id="animeList">
+            <!-- Anime cards will be loaded here by JavaScript -->
+        </div>
+
+        <div class="pagination" id="pagination">
+            <!-- Pagination will be loaded here by JavaScript -->
+        </div>
+    </section>
+
+    <footer>
+        <!-- Footer sama seperti index.html -->
+    </footer>
+
+    <script>
+        // Current page and total pages
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentSort = 'all';
+        
+        // Function to fetch anime list from Aniwatch API
+        async function fetchAnimeList(page = 1, sortOption = 'all') {
+            try {
+                // Show loading state
+                document.getElementById('animeList').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px">Loading anime...</div>';
+                
+                // Fetch data from Aniwatch API
+                const response = await fetch(`/api/v2/hianime/azlist/${sortOption}?page=${page}`);
+                const data = await response.json();
+                
+                // Check if request was successful
+                if (data.success) {
+                    currentPage = data.data.currentPage;
+                    totalPages = data.data.totalPages;
+                    currentSort = sortOption;
+                    renderAnimeList(data.data.animes);
+                    renderPagination();
+                } else {
+                    showError("Failed to load anime list");
+                }
+            } catch (error) {
+                console.error('Error fetching anime list:', error);
+                showError("Error loading anime. Please try again later.");
+            }
+        }
+
+        // Function to render anime list
+        function renderAnimeList(animes) {
+            const animeListElement = document.getElementById('animeList');
+            
+            if (animes.length === 0) {
+                animeListElement.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px">No anime found.</div>';
+                return;
+            }
+            
+            animeListElement.innerHTML = '';
+            
+            animes.forEach(anime => {
+                const animeCard = document.createElement('div');
+                animeCard.className = 'anime-card';
+                animeCard.innerHTML = `
+                    <img src="${anime.poster}" alt="${anime.name}" onerror="this.src='https://via.placeholder.com/200x300?text=No+Image'">
+                    <div class="anime-info">
+                        <h3>${anime.name}</h3>
+                        <div class="meta">
+                            <span>${anime.type || 'N/A'}</span>
+                            <span class="rating">${anime.rating || 'N/A'}</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Add click event to view anime details
+                animeCard.addEventListener('click', () => {
+                    window.location.href = `anime-details.html?id=${anime.id}`;
+                });
+                
+                animeListElement.appendChild(animeCard);
+            });
+        }
+
+        // Function to render pagination
+        function renderPagination() {
+            const paginationElement = document.getElementById('pagination');
+            paginationElement.innerHTML = '';
+            
+            // Previous button
+            const prevBtn = document.createElement('a');
+            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevBtn.href = '#';
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    fetchAnimeList(currentPage - 1, currentSort);
+                }
+            });
+            paginationElement.appendChild(prevBtn);
+            
+            // Page numbers
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(totalPages, currentPage + 2);
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageLink = document.createElement(i === currentPage ? 'span' : 'a');
+                if (i !== currentPage) {
+                    pageLink.href = '#';
+                    pageLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        fetchAnimeList(i, currentSort);
+                    });
+                } else {
+                    pageLink.className = 'current';
+                }
+                pageLink.textContent = i;
+                paginationElement.appendChild(pageLink);
+            }
+            
+            // Next button
+            const nextBtn = document.createElement('a');
+            nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextBtn.href = '#';
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    fetchAnimeList(currentPage + 1, currentSort);
+                }
+            });
+            paginationElement.appendChild(nextBtn);
+        }
+
+        // Function to show error message
+        function showError(message) {
+            document.getElementById('animeList').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:50px">${message}</div>`;
+        }
+
+        // Initialize filters
+        document.getElementById('sort').addEventListener('change', (e) => {
+            fetchAnimeList(1, e.target.value);
+        });
+
+        document.getElementById('applyBtn').addEventListener('click', () => {
+            // Implement advanced filtering logic here
+            alert('Advanced filtering will be implemented here');
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            document.getElementById('sort').value = 'all';
+            document.getElementById('type').value = 'all';
+            document.getElementById('status').value = 'all';
+            document.getElementById('genre').value = 'all';
+            document.getElementById('language').value = 'all';
+            document.getElementById('year').value = '';
+            fetchAnimeList(1, 'all');
+        });
+
+        // Fetch anime list when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAnimeList();
+        });
+    </script>
+</body>
+</html>
