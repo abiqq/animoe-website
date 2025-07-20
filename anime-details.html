@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Details - AniMoe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS dari index.html */
+
+        /* Anime Details */
+        .anime-detail {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .anime-poster {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            height: 450px;
+        }
+
+        .anime-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .anime-rating {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .anime-info {
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .anime-title {
+            font-size: 28px;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .anime-jtitle {
+            font-size: 18px;
+            color: #777;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .anime-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+
+        .meta-item i {
+            color: var(--primary-color);
+        }
+
+        .anime-description {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .anime-genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .genre-tag {
+            background-color: var(--light-pink);
+            color: var(--secondary-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .next-episode {
+            background-color: var(--light-gray);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin: 30px 0 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--secondary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Episodes List */
+        .episodes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .episode-card {
+            background-color: var(--white);
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .episode-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 126, 185, 0.3);
+        }
+
+        .episode-number {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+
+        .episode-title {
+            font-size: 14px;
+            color: #777;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Characters List */
+        .characters-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .character-card {
+            background-color: var(--white);
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .character-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .character-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .character-card:hover .character-image img {
+            transform: scale(1.05);
+        }
+
+        .character-info {
+            padding: 15px;
+        }
+
+        .character-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .character-role {
+            font-size: 14px;
+            color: #777;
+        }
+
+        /* Details Table */
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .details-table tr:nth-child(even) {
+            background-color: var(--light-gray);
+        }
+
+        .details-table th {
+            text-align: left;
+            padding: 12px 15px;
+            color: var(--secondary-color);
+            width: 30%;
+        }
+
+        .details-table td {
+            padding: 12px 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-heart"></i>
+                AniMoe
+            </a>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="anime-list.html">Anime List</a></li>
+                    <li><a href="genres.html">Genres</a></li>
+                    <li><a href="schedule.html">Schedule</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </nav>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Search anime...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="anime-detail" id="animeDetail">
+            <!-- Content will be loaded by JavaScript -->
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="episodes">Episodes</div>
+            <div class="tab" data-tab="characters">Characters</div>
+            <div class="tab" data-tab="details">Details</div>
+        </div>
+        
+        <div class="tab-content active" id="episodesTab">
+            <div id="episodesList">
+                <!-- Episodes will be loaded here -->
+            </div>
+        </div>
+        
+        <div class="tab-content" id="charactersTab">
+            <div id="charactersList">
+                <!-- Characters will be loaded here -->
+            </div>
+        </div>
+        
+        <div class="tab-content" id="detailsTab">
+            <div id="animeDetails">
+                <!-- Additional details will be loaded here -->
+            </div>
+        </div>
+        
+        <div class="recommendations">
+            <h2 class="section-title">Recommended Anime</h2>
+            <div class="anime-grid" id="recommendationsList">
+                <!-- Recommendations will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <!-- Footer sama seperti index.html -->
+    </footer>
+
+    <script>
+        // Get anime ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const animeId = urlParams.get('id');
+        
+        // Function to fetch anime details from Aniwatch API
+        async function fetchAnimeDetails() {
+            if (!animeId) {
+                showError("No anime ID provided");
+                return;
+            }
+            
+            try {
+                // Show loading state
+                document.getElementById('animeDetail').innerHTML = '<div style="text-align:center;padding:50px">Loading anime details...</div>';
+                
+                // Fetch anime info
+                const [aboutResponse, episodesResponse, nextEpResponse] = await Promise.all([
+                    fetch(`/api/v2/hianime/anime/${animeId}`),
+                    fetch(`/api/v2/hianime/anime/${animeId}/episodes`),
+                    fetch(`/api/v2/hianime/anime/${animeId}/next-episode-schedule`)
+                ]);
+                
+                const aboutData = await aboutResponse.json();
+                const episodesData = await episodesResponse.json();
+                const nextEpData = await nextEpResponse.json();
+                
+                if (aboutData.success && episodesData.success) {
+                    renderAnimeDetails(aboutData.data, episodesData.data, nextEpData.data);
+                    setupTabs();
+                    
+                    // Fetch recommendations if available
+                    if (aboutData.data.recommendedAnimes && aboutData.data.recommendedAnimes.length > 0) {
+                        renderRecommendations(aboutData.data.recommendedAnimes);
+                    }
+                } else {
+                    showError("Failed to load anime details");
+                }
+            } catch (error) {
+                console.error('Error fetching anime details:', error);
+                showError("Error loading anime details. Please try again later.");
+            }
+        }
+        
+        // Function to render anime details
+        function renderAnimeDetails(aboutData, episodesData, nextEpData) {
+            const anime = aboutData.anime.info;
+            const animeDetailElement = document.getElementById('animeDetail');
+            
+            // Format episodes text
+            let episodesText = 'N/A';
+            if (anime.stats.episodes) {
+                episodesText = `${anime.stats.episodes.sub || 0} Sub`;
+                if (anime.stats.episodes.dub) {
+                    episodesText += ` | ${anime.stats.episodes.dub} Dub`;
+                }
+                episodesText += ' Episodes';
+            }
+            
+            // Format next episode info if available
+            let nextEpisodeInfo = '';
+            if (nextEpData.success && nextEpData.data.airingTimestamp) {
+                const airingDate = new Date(nextEpData.data.airingISOTimestamp);
+                nextEpisodeInfo = `
+                    <div class="next-episode">
+                        <strong>Next Episode:</strong> ${airingDate.toLocaleString()}
+                    </div>
+                `;
+            }
+            
+            // Render anime details
+            animeDetailElement.innerHTML = `
+                <div class="anime-poster">
+                    <img src="${anime.poster}" alt="${anime.name}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
+                    ${anime.stats.rating ? `<div class="anime-rating">${anime.stats.rating}</div>` : ''}
+                </div>
+                
+                <div class="anime-info">
+                    <h1 class="anime-title">${anime.name}</h1>
+                    ${anime.jname ? `<h2 class="anime-jtitle">${anime.jname}</h2>` : ''}
+                    
+                    <div class="anime-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-tv"></i>
+                            <span>${anime.stats.type || 'N/A'}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>${anime.moreInfo.aired || 'N/A'}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>${anime.stats.duration || 'N/A'}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-flag"></i>
+                            <span>${anime.moreInfo.status || 'N/A'}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-film"></i>
+                            <span>${episodesText}</span>
+                        </div>
+                    </div>
+                    
+                    ${anime.description ? `<div class="anime-description">${anime.description}</div>` : ''}
+                    
+                    ${anime.moreInfo.genres ? `
+                        <div class="anime-genres">
+                            ${anime.moreInfo.genres.map(genre => `<span class="genre-tag">${genre}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    ${nextEpisodeInfo}
+                    
+                    <div>
+                        <a href="#" class="btn btn-primary" id="watchBtn"><i class="fas fa-play"></i> Watch Now</a>
+                        <a href="#" class="btn btn-outline"><i class="fas fa-plus"></i> Add to List</a>
+                        <a href="#" class="btn btn-outline"><i class="fas fa-share-alt"></i> Share</a>
+                    </div>
+                </div>
+            `;
+            
+            // Render episodes
+            if (episodesData.data && episodesData.data.episodes) {
+                renderEpisodes(episodesData.data.episodes);
+            }
+            
+            // Render characters if available
+            if (anime.characterVoiceActor && anime.characterVoiceActor.length > 0) {
+                renderCharacters(anime.characterVoiceActor);
+            }
+            
+            // Render additional details
+            renderAdditionalDetails(anime.moreInfo);
+            
+            // Set up watch button
+            document.getElementById('watchBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (episodesData.data && episodesData.data.episodes.length > 0) {
+                    const firstEpisode = episodesData.data.episodes[0];
+                    window.location.href = `watch.html?episodeId=${firstEpisode.episodeId}`;
+                }
+            });
+        }
+        
+        // Function to render episodes
+        function renderEpisodes(episodes) {
+            const episodesListElement = document.getElementById('episodesList');
+            
+            if (episodes.length === 0) {
+                episodesListElement.innerHTML = '<p>No episodes available.</p>';
+                return;
+            }
+            
+            episodesListElement.innerHTML = '<div class="episodes-list"></div>';
+            const episodesListContainer = episodesListElement.querySelector('.episodes-list');
+            
+            episodes.forEach(episode => {
+                const episodeCard = document.createElement('div');
+                episodeCard.className = 'episode-card';
+                episodeCard.innerHTML = `
+                    <div class="episode-number">Episode ${episode.number}</div>
+                    <div class="episode-title">${episode.title || 'Untitled'}</div>
+                `;
+                
+                episodeCard.addEventListener('click', () => {
+                    window.location.href = `watch.html?episodeId=${episode.episodeId}`;
+                });
+                
+                episodesListContainer.appendChild(episodeCard);
+            });
+        }
+        
+        // Function to render characters
+        function renderCharacters(characters) {
+            const charactersListElement = document.getElementById('charactersList');
+            
+            charactersListElement.innerHTML = '<div class="characters-list"></div>';
+            const charactersListContainer = charactersListElement.querySelector('.characters-list');
+            
+            characters.forEach(character => {
+                const characterCard = document.createElement('div');
+                characterCard.className = 'character-card';
+                characterCard.innerHTML = `
+                    <div class="character-image">
+                        <img src="${character.character.poster}" alt="${character.character.name}" onerror="this.src='https://via.placeholder.com/200x300?text=No+Image'">
+                    </div>
+                    <div class="character-info">
+                        <div class="character-name">${character.character.name}</div>
+                        <div class="character-role">${character.character.cast}</div>
+                        <div class="character-separator" style="margin:10px 0;border-top:1px dashed #ddd;"></div>
+                        <div class="character-name">${character.voiceActor.name}</div>
+                        <div class="character-role">Voice Actor</div>
+                    </div>
+                `;
+                
+                charactersListContainer.appendChild(characterCard);
+            });
+        }
+        
+        // Function to render additional details
+        function renderAdditionalDetails(moreInfo) {
+            const detailsElement = document.getElementById('animeDetails');
+            
+            let detailsHTML = '<table class="details-table">';
+            
+            if (moreInfo.studios) {
+                detailsHTML += `
+                    <tr>
+                        <th>Studios</th>
+                        <td>${moreInfo.studios}</td>
+                    </tr>
+                `;
+            }
+            
+            if (moreInfo.aired) {
+                detailsHTML += `
+                    <tr>
+                        <th>Aired</th>
+                        <td>${moreInfo.aired}</td>
+                    </tr>
+                `;
+            }
+            
+            if (moreInfo.duration) {
+                detailsHTML += `
+                    <tr>
+                        <th>Duration</th>
+                        <td>${moreInfo.duration}</td>
+                    </tr>
+                `;
+            }
+            
+            if (moreInfo.status) {
+                detailsHTML += `
+                    <tr>
+                        <th>Status</th>
+                        <td>${moreInfo.status}</td>
+                    </tr>
+                `;
+            }
+            
+            if (moreInfo.synonyms) {
+                detailsHTML += `
+                    <tr>
+                        <th>Synonyms</th>
+                        <td>${moreInfo.synonyms}</td>
+                    </tr>
+                `;
+            }
+            
+            detailsHTML += '</table>';
+            detailsElement.innerHTML = detailsHTML;
+        }
+        
+        // Function to render recommendations
+        function renderRecommendations(recommendations) {
+            const recommendationsListElement = document.getElementById('recommendationsList');
+            
+            if (recommendations.length === 0) {
+                recommendationsListElement.innerHTML = '<p>No recommendations available.</p>';
+                return;
+            }
+            
+            recommendationsListElement.innerHTML = '';
+            
+            recommendations.slice(0, 6).forEach(anime => {
+                const animeCard = document.createElement('div');
+                animeCard.className = 'anime-card';
+                animeCard.innerHTML = `
+                    <img src="${anime.poster}" alt="${anime.name}" onerror="this.src='https://via.placeholder.com/200x300?text=No+Image'">
+                    <div class="anime-info">
+                        <h3>${anime.name}</h3>
+                        <div class="meta">
+                            <span>${anime.type || 'N/A'}</span>
+                            <span class="rating">${anime.rating || 'N/A'}</span>
+                        </div>
+                    </div>
+                `;
+                
+                animeCard.addEventListener('click', () => {
+                    window.location.href = `anime-details.html?id=${anime.id}`;
+                });
+                
+                recommendationsListElement.appendChild(animeCard);
+            });
+        }
+        
+        // Function to set up tabs
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabId}Tab`).classList.add('active');
+                });
+            });
+        }
+        
+        // Function to show error message
+        function showError(message) {
+            document.getElementById('animeDetail').innerHTML = `<div style="text-align:center;padding:50px">${message}</div>`;
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', fetchAnimeDetails);
+    </script>
+</body>
+</html>
