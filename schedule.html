@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Schedule - AniMoe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS dari index.html */
+
+        /* Schedule Page */
+        .schedule-container {
+            margin: 40px 0;
+        }
+
+        .schedule-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .schedule-title {
+            font-size: 36px;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .schedule-description {
+            color: #777;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .date-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .date-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            background-color: var(--white);
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .date-btn:hover {
+            background-color: var(--light-pink);
+        }
+
+        .date-btn.active {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border-color: var(--secondary-color);
+        }
+
+        .schedule-day {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .day-title {
+            font-size: 24px;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .schedule-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .schedule-item:hover {
+            background-color: var(--light-gray);
+        }
+
+        .schedule-time {
+            font-weight: 600;
+            color: var(--secondary-color);
+            min-width: 60px;
+        }
+
+        .schedule-poster {
+            width: 60px;
+            height: 80px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .schedule-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .schedule-info {
+            flex: 1;
+        }
+
+        .schedule-anime-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .schedule-episode {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .no-schedule {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-heart"></i>
+                AniMoe
+            </a>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="anime-list.html">Anime List</a></li>
+                    <li><a href="genres.html">Genres</a></li>
+                    <li><a href="schedule.html" class="active">Schedule</a></li>
+                    <li><a href="about.html">About</a></li>
+                </ul>
+            </nav>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Search anime...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <section class="container schedule-container">
+        <div class="schedule-header">
+            <h1 class="schedule-title">Anime Schedule</h1>
+            <p class="schedule-description">Check out the airing schedule for your favorite anime shows. Never miss a new episode!</p>
+        </div>
+
+        <div class="date-selector">
+            <button class="date-btn" data-days="0">Today</button>
+            <button class="date-btn" data-days="1">Tomorrow</button>
+            <button class="date-btn" data-days="2">2 Days</button>
+            <button class="date-btn" data-days="3">3 Days</button>
+            <button class="date-btn" data-days="4">4 Days</button>
+            <button class="date-btn" data-days="5">5 Days</button>
+            <button class="date-btn" data-days="6">6 Days</button>
+        </div>
+
+        <div id="scheduleContent">
+            <!-- Schedule will be loaded here by JavaScript -->
+        </div>
+    </section>
+
+    <footer>
+        <!-- Footer sama seperti index.html -->
+    </footer>
+
+    <script>
+        // Function to get date string
+        function getDateString(daysToAdd = 0) {
+            const date = new Date();
+            date.setDate(date.getDate() + daysToAdd);
+            
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            
+            return `${year}-${month}-${day}`;
+        }
+
+        // Function to get day name
+        function getDayName(dateStr) {
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const date = new Date(dateStr);
+            return days[date.getDay()];
+        }
+
+        // Function to fetch schedule from Aniwatch API
+        async function fetchSchedule(dateStr) {
+            try {
+                // Show loading state
+                document.getElementById('scheduleContent').innerHTML = '<div style="text-align:center;padding:50px">Loading schedule...</div>';
+                
+                // Fetch data from Aniwatch API
+                const response = await fetch(`/api/v2/hianime/schedule?date=${dateStr}`);
+                const data = await response.json();
+                
+                // Check if request was successful
+                if (data.success) {
+                    renderSchedule(dateStr, data.data.scheduledAnimes);
+                } else {
+                    showError("Failed to load schedule");
+                }
+            } catch (error) {
+                console.error('Error fetching schedule:', error);
+                showError("Error loading schedule. Please try again later.");
+            }
+        }
+
+        // Function to render schedule
+        function renderSchedule(dateStr, scheduledAnimes) {
+            const scheduleContentElement = document.getElementById('scheduleContent');
+            const dayName = getDayName(dateStr);
+            
+            if (scheduledAnimes.length === 0) {
+                scheduleContentElement.innerHTML = `
+                    <div class="schedule-day">
+                        <h2 class="day-title">${dayName} (${dateStr})</h2>
+                        <div class="no-schedule">
+                            No anime scheduled for this day.
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Group by time (assuming API returns sorted by time)
+            const timeGroups = {};
+            scheduledAnimes.forEach(anime => {
+                if (!timeGroups[anime.time]) {
+                    timeGroups[anime.time] = [];
+                }
+                timeGroups[anime.time].push(anime);
+            });
+            
+            let scheduleHTML = `
+                <div class="schedule-day">
+                    <h2 class="day-title">${dayName} (${dateStr})</h2>
+                    <div class="schedule-list">
+            `;
+            
+            for (const [time, animes] of Object.entries(timeGroups)) {
+                animes.forEach(anime => {
+                    scheduleHTML += `
+                        <div class="schedule-item">
+                            <div class="schedule-time">${time}</div>
+                            <div class="schedule-poster">
+                                <img src="${anime.poster}" alt="${anime.name}" onerror="this.src='https://via.placeholder.com/60x80?text=No+Image'">
+                            </div>
+                            <div class="schedule-info">
+                                <div class="schedule-anime-title">${anime.name}</div>
+                                <div class="schedule-episode">Episode ${anime.episodeNumber || 'N/A'}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            scheduleHTML += `
+                    </div>
+                </div>
+            `;
+            
+            scheduleContentElement.innerHTML = scheduleHTML;
+            
+            // Add click events to schedule items
+            document.querySelectorAll('.schedule-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const animeId = item.querySelector('.schedule-anime-title').textContent.toLowerCase().replace(/ /g, '-');
+                    window.location.href = `anime-details.html?id=${animeId}`;
+                });
+            });
+        }
+
+        // Function to show error message
+        function showError(message) {
+            document.getElementById('scheduleContent').innerHTML = `<div style="text-align:center;padding:50px">${message}</div>`;
+        }
+
+        // Initialize date buttons
+        function initializeDateButtons() {
+            document.querySelectorAll('.date-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    const daysToAdd = parseInt(btn.getAttribute('data-days'));
+                    const dateStr = getDateString(daysToAdd);
+                    fetchSchedule(dateStr);
+                });
+            });
+            
+            // Activate today's button by default
+            document.querySelector('.date-btn[data-days="0"]').click();
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', initializeDateButtons);
+    </script>
+</body>
+</html>
